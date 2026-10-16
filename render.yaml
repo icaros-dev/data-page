@@ -1,0 +1,19 @@
+# Configuração do servidor (backend) no Render: https://render.com
+services:
+  - type: web
+    name: data-page-pesquisa-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: VOTE_LIMIT_PER_HOUR
+        value: "30"

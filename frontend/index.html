@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Page - Pesquisa Eleitoral Interna</title>
+  <meta name="description" content="Crie sua pesquisa eleitoral interna e envie para os seus grupos de WhatsApp, Facebook, Instagram e mais.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">%</span>
+      <span>Data <strong>Page</strong></span>
+    </div>
+    <span class="badge">Pesquisa eleitoral interna</span>
+  </header>
+
+  <main class="container">
+    <section class="hero hero-split">
+      <div class="hero-text">
+        <p class="eyebrow">DATA PAGE · PESQUISA ELEITORAL INTERNA</p>
+        <h1>O que os seus<br><span>grupos pensam?</span></h1>
+        <p class="subtitle">
+          Entre com o seu Instagram, monte a pesquisa e receba um link para enviar nos seus
+          grupos de WhatsApp, Facebook, Instagram e outras redes. Os resultados aparecem no seu painel
+          em tempo real, separados por rede social.
+        </p>
+        <ul class="checks">
+          <li>Quem responde pode se identificar ou ficar anônimo</li>
+          <li>Um voto por aparelho</li>
+          <li>Resultado por rede: saiba de onde vêm as respostas</li>
+        </ul>
+      </div>
+
+      <div class="card auth-card">
+        <div class="tabs" role="tablist">
+          <button id="tabLogin" class="tab active" type="button" role="tab" aria-selected="true">Entrar</button>
+          <button id="tabRegister" class="tab" type="button" role="tab" aria-selected="false">Criar conta</button>
+        </div>
+
+        <form id="authForm" novalidate>
+          <label class="field">
+            <span>Seu Instagram</span>
+            <div class="input-prefix">
+              <span>@</span>
+              <input id="instagram" name="instagram" type="text" autocomplete="username"
+                     autocapitalize="none" spellcheck="false" placeholder="seuperfil" required>
+            </div>
+          </label>
+
+          <label id="nameField" class="field hidden">
+            <span>Seu nome</span>
+            <input id="name" name="name" type="text" autocomplete="name" placeholder="Nome completo">
+          </label>
+
+          <label class="field">
+            <span>Senha</span>
+            <input id="password" name="password" type="password" autocomplete="current-password"
+                   placeholder="Mínimo 6 caracteres" required>
+          </label>
+
+          <button id="authButton" class="primary-btn full" type="submit">Entrar</button>
+          <div id="authStatus" class="status hidden"></div>
+        </form>
+      </div>
+    </section>
+
+    <section class="how">
+      <p class="eyebrow">COMO FUNCIONA</p>
+      <div class="steps">
+        <div class="step"><span>1</span><h3>Entre</h3><p>Crie sua conta com o @ do Instagram e uma senha.</p></div>
+        <div class="step"><span>2</span><h3>Monte</h3><p>Escreva as perguntas e os nomes dos candidatos.</p></div>
+        <div class="step"><span>3</span><h3>Envie</h3><p>Compartilhe o link nos grupos de WhatsApp, Facebook, Instagram e mais.</p></div>
+        <div class="step"><span>4</span><h3>Acompanhe</h3><p>Veja os percentuais e de qual rede veio cada resposta.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Data Page · Pesquisa Eleitoral Interna · Uso interno, sem registro na Justiça Eleitoral</p>
+  </footer>
+
+  <script src="api.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

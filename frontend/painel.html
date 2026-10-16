@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu painel · Data Page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">%</span>
+      <span>Data <strong>Page</strong></span>
+    </div>
+    <div class="user-box">
+      <span id="userHandle" class="badge">@</span>
+      <button id="logoutButton" class="link-btn" type="button">Sair</button>
+    </div>
+  </header>
+
+  <main class="container page">
+    <div class="notice">
+      <strong>Pesquisa interna.</strong> Esta ferramenta serve para você medir a opinião dos seus grupos.
+      Ela não é registrada na Justiça Eleitoral, então os resultados <strong>não podem ser divulgados</strong>
+      como pesquisa eleitoral (Lei 9.504/97, art. 33).
+    </div>
+
+    <!-- Minhas pesquisas -->
+    <section id="listSection">
+      <div class="section-title">
+        <span>MINHAS PESQUISAS</span>
+        <button id="newSurveyButton" class="primary-btn small" type="button">+ Nova pesquisa</button>
+      </div>
+      <div id="listStatus" class="status hidden"></div>
+      <div id="surveyList" class="survey-list"></div>
+      <div id="emptyState" class="card empty hidden">
+        <h2>Nenhuma pesquisa ainda</h2>
+        <p>Crie a sua primeira pesquisa para gerar o link de compartilhamento.</p>
+        <button id="emptyNewButton" class="primary-btn" type="button">Criar pesquisa</button>
+      </div>
+    </section>
+
+    <!-- Nova pesquisa -->
+    <section id="formSection" class="hidden">
+      <div class="section-title">
+        <span>NOVA PESQUISA</span>
+        <button id="cancelFormButton" class="link-btn" type="button">Cancelar</button>
+      </div>
+
+      <form id="surveyForm" class="card" novalidate>
+        <label class="field">
+          <span>Título da pesquisa</span>
+          <input id="surveyTitle" type="text" maxlength="120" placeholder="Ex.: Eleição para prefeito 2028" required>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Cidade / região <small>(opcional)</small></span>
+            <input id="surveyCity" type="text" maxlength="80" placeholder="Ex.: Goiânia - GO">
+          </label>
+          <label class="check-field">
+            <input id="askNeighborhood" type="checkbox">
+            <span>Perguntar o bairro de quem responde</span>
+          </label>
+        </div>
+        <label class="field">
+          <span>Mensagem de abertura <small>(opcional)</small></span>
+          <textarea id="surveyDescription" rows="2" maxlength="400"
+                    placeholder="Ex.: Queremos saber a sua opinião. Leva menos de 1 minuto!"></textarea>
+        </label>
+
+        <div id="questions"></div>
+        <button id="addQuestionButton" class="secondary-btn" type="button">+ Adicionar pergunta</button>
+
+        <div class="form-actions">
+          <button id="saveSurveyButton" class="primary-btn" type="submit">Criar pesquisa e gerar link</button>
+        </div>
+        <div id="formStatus" class="status hidden"></div>
+      </form>
+    </section>
+
+    <!-- Resultados -->
+    <section id="resultsSection" class="hidden">
+      <div class="section-title">
+        <span>RESULTADOS</span>
+        <button id="backButton" class="link-btn" type="button">← Voltar</button>
+      </div>
+
+      <article class="card">
+        <div class="results-head">
+          <div>
+            <h2 id="resultsTitle">—</h2>
+            <p id="resultsMeta" class="muted">—</p>
+          </div>
+          <div class="results-actions">
+            <button id="refreshButton" class="secondary-btn small" type="button">Atualizar</button>
+            <button id="csvButton" class="secondary-btn small" type="button">Baixar planilha (CSV)</button>
+          </div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><p class="mini-label">RESPOSTAS</p><strong id="kpiTotal">0</strong></div>
+          <div class="kpi"><p class="mini-label">IDENTIFICADAS</p><strong id="kpiIdentified">0</strong></div>
+          <div class="kpi"><p class="mini-label">ANÔNIMAS</p><strong id="kpiAnonymous">0</strong></div>
+        </div>
+
+        <div id="questionResults"></div>
+
+        <div class="split">
+          <div>
+            <p class="mini-label">DE ONDE VIERAM AS RESPOSTAS</p>
+            <div id="originResults" class="bars"></div>
+          </div>
+          <div id="neighborhoodBox" class="hidden">
+            <p class="mini-label">BAIRROS</p>
+            <div id="neighborhoodResults" class="bars"></div>
+          </div>
+        </div>
+
+        <div class="identified">
+          <p class="mini-label">QUEM SE IDENTIFICOU</p>
+          <div class="table-wrap">
+            <table>
+              <thead id="identifiedHead"></thead>
+              <tbody id="identifiedBody"></tbody>
+            </table>
+          </div>
+          <p id="identifiedEmpty" class="muted hidden">Ninguém se identificou até agora.</p>
+        </div>
+
+        <p class="disclaimer">
+          Os percentuais refletem apenas quem respondeu pelo link, não uma amostra estatística da população.
+          Os nomes informados são dados pessoais sensíveis (opinião política, LGPD art. 5º, II):
+          use somente para a finalidade informada e não compartilhe.
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <template id="questionTemplate">
+    <fieldset class="question-box">
+      <legend>Pergunta <span class="q-number">1</span></legend>
+      <button class="link-btn remove-question" type="button">Remover</button>
+      <label class="field">
+        <span>Pergunta</span>
+        <input class="q-text" type="text" maxlength="200" placeholder="Ex.: Se a eleição fosse hoje, em quem você votaria para prefeito?">
+      </label>
+      <label class="field">
+        <span>Opções / candidatos <small>(um por linha)</small></span>
+        <textarea class="q-options" rows="4" placeholder="Candidato A&#10;Candidato B&#10;Candidato C"></textarea>
+      </label>
+      <div class="check-row">
+        <label class="check-field"><input class="q-undecided" type="checkbox" checked><span>Incluir “Indeciso / Não sei”</span></label>
+        <label class="check-field"><input class="q-blank" type="checkbox" checked><span>Incluir “Branco / Nulo”</span></label>
+      </div>
+    </fieldset>
+  </template>
+
+  <script src="api.js"></script>
+  <script src="painel.js"></script>
+</body>
+</html>

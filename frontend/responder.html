@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pesquisa · Data Page</title>
+  <meta name="description" content="Responda a pesquisa. Você pode participar sem se identificar.">
+  <meta property="og:title" content="Data Page - Pesquisa Eleitoral Interna">
+  <meta property="og:description" content="Participe da pesquisa. Você pode responder sem se identificar.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">%</span>
+      <span>Data <strong>Page</strong></span>
+    </div>
+    <span class="badge">Pesquisa eleitoral interna</span>
+  </header>
+
+  <main class="container narrow page">
+    <div id="loadStatus" class="status">Carregando a pesquisa...</div>
+
+    <form id="voteForm" class="hidden" novalidate>
+      <section class="card survey-intro">
+        <p id="surveyOwner" class="eyebrow"></p>
+        <h1 id="surveyTitle" class="title-sm"></h1>
+        <p id="surveyCity" class="muted"></p>
+        <p id="surveyDescription"></p>
+      </section>
+
+      <div id="questionList"></div>
+
+      <section id="neighborhoodSection" class="card hidden">
+        <label class="field">
+          <span>Seu bairro <small>(opcional)</small></span>
+          <input id="neighborhood" type="text" maxlength="60" placeholder="Ex.: Centro">
+        </label>
+      </section>
+
+      <section id="originSection" class="card hidden">
+        <p class="q-title">Por onde você recebeu este link?</p>
+        <div class="choice-grid" id="originChoices"></div>
+      </section>
+
+      <section class="card">
+        <p class="q-title">Como você quer responder?</p>
+        <div class="choice-grid two">
+          <label class="choice">
+            <input type="radio" name="identify" value="no" checked>
+            <span><strong>Anônimo</strong><small>Seu nome não será registrado</small></span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="identify" value="yes">
+            <span><strong>Com meu nome</strong><small>O organizador verá quem você é</small></span>
+          </label>
+        </div>
+
+        <div id="identityFields" class="hidden">
+          <label class="field">
+            <span>Seu nome</span>
+            <input id="voterName" type="text" maxlength="80" autocomplete="name" placeholder="Como você quer ser identificado">
+          </label>
+          <label class="check-field">
+            <input id="consent" type="checkbox">
+            <span>Autorizo o organizador desta pesquisa a ver meu nome junto com as minhas respostas,
+              somente para esta pesquisa (LGPD).</span>
+          </label>
+        </div>
+      </section>
+
+      <button id="submitButton" class="primary-btn full big" type="submit">Enviar minha resposta</button>
+      <div id="voteStatus" class="status hidden"></div>
+
+      <p class="disclaimer">
+        Consulta interna e informal, sem registro na Justiça Eleitoral. Não representa pesquisa eleitoral oficial.
+        É aceita uma resposta por aparelho.
+      </p>
+    </form>
+
+    <section id="thanks" class="card thanks hidden">
+      <div class="thanks-icon">✓</div>
+      <h1 class="title-sm">Obrigado por participar!</h1>
+      <p class="muted">Sua resposta foi registrada.</p>
+      <p>Que tal enviar para mais pessoas?</p>
+      <div class="share-row center">
+        <a id="thanksWhatsapp" class="share-btn whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+        <button id="thanksCopy" class="share-btn copy" type="button">Copiar link</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Data Page · Pesquisa Eleitoral Interna</p>
+  </footer>
+
+  <script src="api.js"></script>
+  <script src="responder.js"></script>
+</body>
+</html>
