@@ -69,3 +69,10 @@ pesquisas sumiriam. Crie um Postgres gratuito no [Neon](https://neon.tech) ou no
 Os arquivos `.js` e `.css` são carregados com `?v=NÚMERO` nos `.html`. Ao mudar qualquer um deles,
 troque esse número nos três `.html` (`index`, `painel`, `responder`). Assim o navegador de quem já
 visitou o site baixa a versão nova, em vez de usar a antiga guardada na memória.
+
+## Servidor sempre acordado
+
+O workflow `.github/workflows/manter-acordado.yml` acessa o servidor a cada 10 minutos para o Render
+gratuito não desligá-lo. O GitHub às vezes atrasa esses agendamentos; para garantir, cadastre também o
+endereço do servidor em um serviço gratuito de monitoramento, como o cron-job.org ou o UptimeRobot,
+a cada 10 minutos.
