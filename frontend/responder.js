@@ -39,10 +39,36 @@ function el(tag, props = {}, ...children) {
   return node;
 }
 
+// Ofertas da Shopee (lista em ofertas.js). Sem ofertas, a área fica escondida.
+function renderOffers() {
+  const offers = (typeof OFERTAS !== "undefined" ? OFERTAS : [])
+    .filter(o => o && o.nome && /^https:\/\//.test(o.link || ""));
+  if (!offers.length) return;
+  for (const box of document.querySelectorAll("[data-offers]")) {
+    box.replaceChildren(
+      el("div", { class: "offers-head" },
+        el("p", { class: "q-title" }, "Ofertas da Shopee"),
+        el("span", { class: "ad-tag" }, "Publicidade · links de afiliado")
+      ),
+      el("div", { class: "offer-grid" }, offers.map(o => el("a", {
+        class: "offer", href: o.link, target: "_blank", rel: "sponsored noopener noreferrer"
+      },
+        o.imagem ? el("img", { src: o.imagem, alt: "", loading: "lazy" }) : null,
+        el("span", { class: "offer-name" }, o.nome),
+        o.preco ? el("strong", { class: "offer-price" }, o.preco) : null,
+        el("span", { class: "offer-btn" }, "Ver na Shopee")
+      )))
+    );
+    // As ofertas do agradecimento só aparecem depois do voto (em showThanks).
+    if (box.id !== "thanksOffers") box.classList.remove("hidden");
+  }
+}
+
 function showThanks(title) {
   voteForm.classList.add("hidden");
   loadStatus.classList.add("hidden");
   $("thanks").classList.remove("hidden");
+  $("thanksOffers").classList.toggle("hidden", !$("thanksOffers").childElementCount);
   const link = surveyLink(slug, "whatsapp");
   $("thanksWhatsapp").href = `https://wa.me/?text=${encodeURIComponent(`📊 ${title || "Pesquisa"}\nParticipe você também:\n${link}`)}`;
   $("thanksCopy").addEventListener("click", async () => {
@@ -178,4 +204,5 @@ voteForm.addEventListener("submit", async event => {
   }
 });
 
+renderOffers();
 load();

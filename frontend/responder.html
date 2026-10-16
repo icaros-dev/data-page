@@ -7,7 +7,7 @@
   <meta name="description" content="Responda a pesquisa. Você pode participar sem se identificar.">
   <meta property="og:title" content="Pesquisa · Presidente 2026 · 2º turno">
   <meta property="og:description" content="Participe da pesquisa. Você pode responder sem se identificar.">
-  <link rel="stylesheet" href="style.css?v=202610161238">
+  <link rel="stylesheet" href="style.css?v=202610161246">
 </head>
 <body>
   <header class="topbar">
@@ -76,6 +76,8 @@
         Consulta interna e informal, sem registro na Justiça Eleitoral. Não representa pesquisa eleitoral oficial.
         É aceita uma resposta por aparelho.
       </p>
+
+      <section class="offers hidden" data-offers></section>
     </form>
 
     <section id="thanks" class="card thanks hidden">
@@ -88,13 +90,16 @@
         <button id="thanksCopy" class="share-btn copy" type="button">Copiar link</button>
       </div>
     </section>
+
+    <section id="thanksOffers" class="offers hidden" data-offers></section>
   </main>
 
   <footer>
     <p>Data Page · Pesquisa Eleitoral Interna</p>
   </footer>
 
-  <script src="api.js?v=202610161238"></script>
-  <script src="responder.js?v=202610161238"></script>
+  <script src="api.js?v=202610161246"></script>
+  <script src="ofertas.js?v=202610161246"></script>
+  <script src="responder.js?v=202610161246"></script>
 </body>
 </html>
