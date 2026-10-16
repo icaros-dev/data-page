@@ -63,3 +63,9 @@ pesquisas sumiriam. Crie um Postgres gratuito no [Neon](https://neon.tech) ou no
   sobre a eleição são vedadas no período de campanha. Use os números apenas internamente.
 - **LGPD**: opinião política é dado pessoal sensível. O nome só é gravado quando a pessoa escolhe se
   identificar e marca a autorização.
+
+## Ao alterar o site
+
+Os arquivos `.js` e `.css` são carregados com `?v=NÚMERO` nos `.html`. Ao mudar qualquer um deles,
+troque esse número nos três `.html` (`index`, `painel`, `responder`). Assim o navegador de quem já
+visitou o site baixa a versão nova, em vez de usar a antiga guardada na memória.
