@@ -181,10 +181,13 @@ function parseQuestions(raw) {
     if (labels.length < 1 || all.length < 2) return { error: `A pergunta ${i + 1} precisa de pelo menos 2 opções.` };
     if (all.length > MAX_OPTIONS) return { error: `A pergunta ${i + 1} tem opções demais (máximo ${MAX_OPTIONS}).` };
 
+    // "extra" marca Indeciso e Branco/Nulo: ficam fora dos votos válidos e do sorteio da ordem.
+    const extraSet = new Set(extras.filter(e => !labels.includes(e)));
     questions.push({
       id: `q${i + 1}`,
       text,
-      options: all.map((label, j) => ({ id: `o${j + 1}`, label }))
+      shuffle: Boolean(q.shuffle),
+      options: all.map((label, j) => ({ id: `o${j + 1}`, label, ...(extraSet.has(label) && { extra: true }) }))
     });
   }
   return { questions };
@@ -252,12 +255,19 @@ app.get("/api/surveys/:slug/results", requireAuth, wrap(async (req, res) => {
     const counts = Object.fromEntries(q.options.map(o => [o.id, 0]));
     for (const v of votes) if (v.answers?.[q.id] in counts) counts[v.answers[q.id]]++;
     const answered = Object.values(counts).reduce((a, b) => a + b, 0);
+    // Votos válidos: como o TSE, desconsidera brancos, nulos e indecisos.
+    const valid = q.options.filter(o => !o.extra).reduce((sum, o) => sum + counts[o.id], 0);
     return {
       id: q.id,
       text: q.text,
       answered,
-      options: q.options
-        .map(o => ({ ...o, votes: counts[o.id], percent: answered ? counts[o.id] / answered * 100 : 0 }))
+      valid,
+      options: q.options.map(o => ({
+        ...o,
+        votes: counts[o.id],
+        percent: answered ? counts[o.id] / answered * 100 : 0,
+        validPercent: o.extra || !valid ? null : counts[o.id] / valid * 100
+      }))
     };
   });
 

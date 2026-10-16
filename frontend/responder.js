@@ -81,6 +81,18 @@ async function load() {
   }
 }
 
+// Sorteia a ordem dos candidatos para quem aparece primeiro não levar vantagem.
+// Indeciso e Branco/Nulo continuam no fim.
+function orderOptions(q) {
+  if (!q.shuffle) return q.options;
+  const main = q.options.filter(o => !o.extra);
+  for (let i = main.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [main[i], main[j]] = [main[j], main[i]];
+  }
+  return [...main, ...q.options.filter(o => o.extra)];
+}
+
 function render(survey) {
   $("surveyOwner").textContent = survey.owner ? `PESQUISA DE @${survey.owner.toUpperCase()}` : "PESQUISA";
   $("surveyTitle").textContent = survey.title;
@@ -89,7 +101,7 @@ function render(survey) {
 
   $("questionList").replaceChildren(...survey.questions.map((q, i) => el("section", { class: "card" },
     el("p", { class: "q-title" }, `${i + 1}. ${q.text}`),
-    el("div", { class: "choice-grid" }, q.options.map(o => el("label", { class: "choice" },
+    el("div", { class: "choice-grid" }, orderOptions(q).map(o => el("label", { class: "choice" },
       el("input", { type: "radio", name: q.id, value: o.id }),
       el("span", {}, el("strong", {}, o.label))
     )))

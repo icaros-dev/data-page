@@ -34,9 +34,10 @@
       <div id="listStatus" class="status hidden"></div>
       <div id="surveyList" class="survey-list"></div>
       <div id="emptyState" class="card empty hidden">
-        <h2>Nenhuma pesquisa ainda</h2>
-        <p>Crie a sua primeira pesquisa para gerar o link de compartilhamento.</p>
-        <button id="emptyNewButton" class="primary-btn" type="button">Criar pesquisa</button>
+        <p class="eyebrow">PRESIDENTE 2026 · 2º TURNO</p>
+        <h2>Lula x Flávio Bolsonaro</h2>
+        <p>Crie a pesquisa do 2º turno já pronta e receba o link para enviar nos seus grupos.</p>
+        <button id="emptyNewButton" class="primary-btn" type="button">Criar pesquisa Lula x Flávio</button>
       </div>
     </section>
 
@@ -44,18 +45,21 @@
     <section id="formSection" class="hidden">
       <div class="section-title">
         <span>NOVA PESQUISA</span>
-        <button id="cancelFormButton" class="link-btn" type="button">Cancelar</button>
+        <span class="title-actions">
+          <button id="blankFormButton" class="link-btn" type="button">Começar em branco</button>
+          <button id="cancelFormButton" class="link-btn muted-link" type="button">Cancelar</button>
+        </span>
       </div>
 
       <form id="surveyForm" class="card" novalidate>
         <label class="field">
           <span>Título da pesquisa</span>
-          <input id="surveyTitle" type="text" maxlength="120" placeholder="Ex.: Eleição para prefeito 2028" required>
+          <input id="surveyTitle" type="text" maxlength="120" placeholder="Ex.: Presidente 2026 · 2º turno" required>
         </label>
         <div class="field-row">
           <label class="field">
             <span>Cidade / região <small>(opcional)</small></span>
-            <input id="surveyCity" type="text" maxlength="80" placeholder="Ex.: Goiânia - GO">
+            <input id="surveyCity" type="text" maxlength="80" placeholder="Ex.: Brasil, ou sua cidade">
           </label>
           <label class="check-field">
             <input id="askNeighborhood" type="checkbox">
@@ -142,15 +146,16 @@
       <button class="link-btn remove-question" type="button">Remover</button>
       <label class="field">
         <span>Pergunta</span>
-        <input class="q-text" type="text" maxlength="200" placeholder="Ex.: Se a eleição fosse hoje, em quem você votaria para prefeito?">
+        <input class="q-text" type="text" maxlength="200" placeholder="Ex.: Se o 2º turno fosse hoje, em quem você votaria para presidente?">
       </label>
       <label class="field">
         <span>Opções / candidatos <small>(um por linha)</small></span>
-        <textarea class="q-options" rows="4" placeholder="Candidato A&#10;Candidato B&#10;Candidato C"></textarea>
+        <textarea class="q-options" rows="4" placeholder="Candidato A&#10;Candidato B"></textarea>
       </label>
       <div class="check-row">
         <label class="check-field"><input class="q-undecided" type="checkbox" checked><span>Incluir “Indeciso / Não sei”</span></label>
         <label class="check-field"><input class="q-blank" type="checkbox" checked><span>Incluir “Branco / Nulo”</span></label>
+        <label class="check-field"><input class="q-shuffle" type="checkbox"><span>Sortear a ordem das opções para cada pessoa</span></label>
       </div>
     </fieldset>
   </template>

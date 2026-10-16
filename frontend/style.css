@@ -168,6 +168,9 @@ h1 span { color: var(--primary); }
 .bar-fill { height: 100%; background: #8fb1f7; border-radius: 999px; transition: width .4s; }
 .bar-row.leader .bar-fill { background: var(--primary); }
 .bar-row.leader .bar-label span { font-weight: 700; }
+.valid-box { margin-top: 18px; padding: 4px 16px 16px; background: #f7f8fa; border-radius: 14px; }
+.title-actions { display: flex; gap: 16px; }
+.muted-link { color: var(--muted); }
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding: 6px 0 22px; border-bottom: 1px solid var(--line); }
 .identified { padding-top: 6px; }
 .table-wrap { overflow-x: auto; }

@@ -11,6 +11,32 @@ const ORIGIN_LABELS = {
 };
 const MAX_QUESTIONS = 5;
 
+// Modelo padrão: 2º turno da eleição presidencial de 2026.
+const PRESIDENTIAL_TEMPLATE = {
+  title: "Presidente 2026 · 2º turno",
+  city: "Brasil",
+  description: "Pesquisa rápida: leva menos de 1 minuto e você pode responder sem se identificar.",
+  questions: [
+    {
+      text: "Se o 2º turno fosse hoje, em quem você votaria para presidente?",
+      options: "Lula (PT)\nFlávio Bolsonaro (PL)",
+      shuffle: true
+    },
+    {
+      text: "O seu voto já está decidido?",
+      options: "Sim, já está decidido\nAinda posso mudar",
+      undecided: false,
+      blank: false
+    },
+    {
+      text: "Qual tema mais pesa no seu voto para presidente?",
+      options: "Economia e emprego\nSaúde\nSegurança pública\nEducação\nCombate à corrupção\nProgramas sociais\nOutro",
+      undecided: false,
+      blank: false
+    }
+  ]
+};
+
 const $ = id => document.getElementById(id);
 const listSection = $("listSection");
 const formSection = $("formSection");
@@ -189,11 +215,14 @@ function renderSurveys(surveys) {
 
 // ---------- Nova pesquisa ----------
 
-function addQuestion(text = "", options = "") {
+function addQuestion({ text = "", options = "", undecided = true, blank = true, shuffle = false } = {}) {
   if (questionsBox.children.length >= MAX_QUESTIONS) return;
   const node = questionTemplate.content.firstElementChild.cloneNode(true);
   node.querySelector(".q-text").value = text;
   node.querySelector(".q-options").value = options;
+  node.querySelector(".q-undecided").checked = undecided;
+  node.querySelector(".q-blank").checked = blank;
+  node.querySelector(".q-shuffle").checked = shuffle;
   node.querySelector(".remove-question").addEventListener("click", () => {
     node.remove();
     renumberQuestions();
@@ -211,16 +240,20 @@ function renumberQuestions() {
   $("addQuestionButton").classList.toggle("hidden", boxes.length >= MAX_QUESTIONS);
 }
 
-function openForm() {
+function openForm(template = PRESIDENTIAL_TEMPLATE) {
   surveyForm.reset();
+  $("surveyTitle").value = template.title || "";
+  $("surveyCity").value = template.city || "";
+  $("surveyDescription").value = template.description || "";
   questionsBox.replaceChildren();
-  addQuestion("Se a eleição fosse hoje, em quem você votaria?");
+  for (const q of template.questions) addQuestion(q);
   hideStatus(formStatus);
   showView("form");
 }
 
-$("newSurveyButton").addEventListener("click", openForm);
-$("emptyNewButton").addEventListener("click", openForm);
+$("newSurveyButton").addEventListener("click", () => openForm());
+$("emptyNewButton").addEventListener("click", () => openForm());
+$("blankFormButton").addEventListener("click", () => openForm({ questions: [{}] }));
 $("cancelFormButton").addEventListener("click", () => showView("list"));
 $("addQuestionButton").addEventListener("click", () => addQuestion());
 
@@ -235,7 +268,8 @@ surveyForm.addEventListener("submit", async event => {
       text: box.querySelector(".q-text").value,
       options: box.querySelector(".q-options").value.split("\n"),
       includeUndecided: box.querySelector(".q-undecided").checked,
-      includeBlank: box.querySelector(".q-blank").checked
+      includeBlank: box.querySelector(".q-blank").checked,
+      shuffle: box.querySelector(".q-shuffle").checked
     }))
   };
 
@@ -290,10 +324,17 @@ function renderResults(data) {
   $("questionResults").replaceChildren(...data.questions.map(q => {
     const max = Math.max(...q.options.map(o => o.votes));
     const sorted = [...q.options].sort((a, b) => b.votes - a.votes);
+    const candidates = q.options.filter(o => !o.extra).sort((a, b) => b.votes - a.votes);
+    const showValid = q.valid > 0 && candidates.length < q.options.length;
     return el("div", { class: "question-result" },
       el("h3", {}, q.text),
       el("p", { class: "muted" }, `${q.answered} resposta(s)`),
-      el("div", { class: "bars" }, sorted.map(o => bar(o.label, o.votes, o.percent, max > 0 && o.votes === max)))
+      el("div", { class: "bars" }, sorted.map(o => bar(o.label, o.votes, o.percent, max > 0 && o.votes === max))),
+      showValid ? el("div", { class: "valid-box" },
+        el("p", { class: "mini-label" }, `VOTOS VÁLIDOS · ${q.valid} (sem brancos, nulos e indecisos)`),
+        el("div", { class: "bars" }, candidates.map(o =>
+          bar(o.label, o.votes, o.validPercent, o.votes === candidates[0].votes)))
+      ) : null
     );
   }));
 
