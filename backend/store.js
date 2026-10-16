@@ -85,8 +85,13 @@ async function createPgStore() {
   const { default: pg } = await import("pg");
   const pool = new pg.Pool({
     connectionString: DATABASE_URL,
-    ssl: /localhost|127\.0\.0\.1/.test(DATABASE_URL) ? false : { rejectUnauthorized: false }
+    ssl: /localhost|127\.0\.0\.1/.test(DATABASE_URL) ? false : { rejectUnauthorized: false },
+    // Sem isso, um banco fora do ar deixa o servidor esperando para sempre.
+    connectionTimeoutMillis: 10000,
+    query_timeout: 15000,
+    max: 5
   });
+  pool.on("error", error => console.error("Erro no banco:", error.message));
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users (

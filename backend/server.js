@@ -21,7 +21,22 @@ const ORIGINS = ["whatsapp", "facebook", "instagram", "telegram", "x", "tiktok",
 const MAX_QUESTIONS = 5;
 const MAX_OPTIONS = 15;
 
-const store = await createStore();
+// O servidor abre na hora; o banco conecta em seguida. Se o banco falhar, as rotas
+// respondem 503 com o motivo (em vez de o servidor nem abrir) e ele tenta de novo.
+let store = null;
+let storeError = "conectando ao banco...";
+async function connectStore() {
+  try {
+    store = await createStore();
+    storeError = null;
+    console.log(`Banco conectado (${storeKind}).`);
+  } catch (error) {
+    storeError = error.message;
+    console.error("Falha ao conectar ao banco:", error.message);
+    setTimeout(connectStore, 15000);
+  }
+}
+connectStore();
 
 // Em hospedagens como o Render, o IP real do usuário vem do proxy.
 app.set("trust proxy", 1);
@@ -45,7 +60,18 @@ const voteLimiter = rateLimit({
 });
 
 app.get("/", (req, res) => {
-  res.json({ status: "ok", service: "Data Page - Pesquisa Eleitoral Interna API", storage: storeKind });
+  res.json({
+    status: store ? "ok" : "sem banco",
+    service: "Data Page - Pesquisa Eleitoral Interna API",
+    storage: storeKind,
+    ...(storeError && { error: storeError })
+  });
+});
+
+// Todas as rotas da API dependem do banco.
+app.use("/api", (req, res, next) => {
+  if (store) return next();
+  res.status(503).json({ error: "O servidor está conectando ao banco de dados. Tente novamente em alguns segundos." });
 });
 
 // ---------- Utilidades ----------
